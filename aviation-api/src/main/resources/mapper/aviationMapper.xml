@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fh.dao.AviationDao">
+<select id="initTable" resultType="com.fh.model.vo.FlightVo">
+    select w.id flightId,w.name flightName,pt.name planeName,pt.type planeTypeId,w.startTime,w.endTime,
+     a.name startAreaName,a.id startAreaId,a.pid startAreaPid,b.id endAreaId,b.pid endAreaPid ,b.name endAreaName
+     from w_flight w left join w_plane_type pt on w.typeId = pt.id
+    left join w_area a on w.startTerminalId = a.id
+    left join w_area b on w.endTerminalId = b.id
+
+</select>
+    <select id="selectTicketById" parameterType="Integer" resultType="com.fh.model.po.FlightTicket">
+        select * from w_fight_ticket where fight_id =#{id}
+    </select>
+    <select id="queryStartPAreaName" parameterType="Integer" resultType="String">
+        select name from w_area where id = #{id}
+    </select>
+    <select id="queryEndPAreaName" parameterType="Integer" resultType="String">
+        select name from w_area where id = #{id}
+    </select>
+</mapper>

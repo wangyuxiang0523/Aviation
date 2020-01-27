@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/js/jquery-3.3.1.js"></script>
+</head>
+<body>
+  <table id="table" cellpadding="0" cellspacing="0" border="1">
+      <tr>
+          <td><input type="checkbox"></td>
+          <td>航班姓名</td>
+          <td>起飞时间</td>
+          <td>到达时间</td>
+          <td>票数</td>
+          <td>票价</td>
+          <td>操作</td>
+      </tr>
+
+  </table>
+</body>
+<script type="text/javascript">
+    $(function () {
+        initTable();
+    })
+    function initTable() {
+        $.ajax({
+            url:"http://localhost:9077/flight/initTable",
+            type:"post",
+            dataType:"json",
+            success:function (result) {
+                  var html=""
+                  for (var i=0;i<result.length;i++){
+                      if(result[i].planeTypeId == 1){
+                         var type = "大型"
+                      }
+                      if(result[i].planeTypeId == 2){
+                          var type = "中型"
+                      }else {
+                          var type = "小型"
+                      }
+                      html+='<tr><td><input type="checkbox"></td><td>'+result[i].flightName+"<br>"+result[i].planeName+"("+type+")"+'</td>'
+                      if (result[i].near != null){
+                          html+='<td>'+result[i].startTime+"<br>"+result[i].near+"<br>"+result[i].startPAreaName+result[i].startAreaName+'</td>'
+                      }else {
+                          html+='<td>'+result[i].startTime+"<br>"+result[i].startPAreaName+result[i].startAreaName+'</td>'
+                      }
+                          html+='<td>'+result[i].endTime+"<br>"+result[i].endPAreaName+result[i].endAreaName+'</td>'
+                          html+='<td>'+result[i].totalCount+'</td><td>'+result[i].price+'</td>'
+                          html+='<td><input type="button" value="订票"><input type="button" value="修改"><input type="button" value="取消航班"></td>'
+                  }
+                  $("#table").append(html)
+            }
+        })
+    }
+</script>
+</html>
