@@ -7,18 +7,28 @@ import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.math.BigDecimal;
 
-@TableName("w_flight_ticket")
+@TableName("w_fight_ticket")
 public class FlightTicket {
     @TableId(value = "id",type = IdType.AUTO)
    private Integer id;
+    @TableField(value = "fight_id")
+   private Integer flightId;
 
-   private String name;
 
    private  Integer type;
    @TableField(value = "totalCount")
    private Integer totalCount;
 
    private BigDecimal price;
+
+
+    public Integer getFlightId() {
+        return flightId;
+    }
+
+    public void setFlightId(Integer flightId) {
+        this.flightId = flightId;
+    }
 
     public Integer getId() {
         return id;
@@ -28,13 +38,6 @@ public class FlightTicket {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public Integer getType() {
         return type;
