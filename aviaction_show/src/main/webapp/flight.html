@@ -236,11 +236,25 @@
                       }
                           html+='<td>'+result[i].endTime+"<br>"+result[i].endPAreaName+result[i].endAreaName+'</td>'
                           html+='<td>'+result[i].totalCount+'</td><td>'+result[i].price+'</td>'
-                          html+='<td><input type="button" value="订票"><input type="button" value="修改"><input type="button" value="取消航班"></td>'
+                          html+='<td><input type="button" value="订票"><input type="button" value="修改"><input type="button" value="取消航班" onclick="deleteFlight('+result[i].flightId+')"></td>'
                   }
                   $("#table").append(html)
             }
         })
+    }
+    function deleteFlight(id) {
+           $.ajax({
+           url:"http://localhost:9077/flight/deleteFlight",
+           type:"post",
+           dataType:"json",
+           data:{"id":id},
+           success:function (result) {
+                 if(result.code == 200){
+                     alert(result.message)
+                     location.reload;
+                 }
+           }
+       })
     }
 </script>
 </html>

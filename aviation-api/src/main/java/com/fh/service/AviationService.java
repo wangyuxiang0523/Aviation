@@ -22,4 +22,6 @@ public interface AviationService {
     void addFlight(FlightPo flightPo);
 
     void addTouDeng(FlightTicket flightTicket);
+
+    void deleteFlight(Integer id);
 }

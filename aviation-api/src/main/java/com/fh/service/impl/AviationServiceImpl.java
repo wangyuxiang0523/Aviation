@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AviationServiceImpl implements AviationService {
@@ -91,5 +93,13 @@ public class AviationServiceImpl implements AviationService {
     @Override
     public void addTouDeng(FlightTicket flightTicket) {
         flightTicketDao.insert(flightTicket);
+    }
+
+    @Override
+    public void deleteFlight(Integer id) {
+        aviationDao.deleteById(id);
+        Map<String,Object> columnMap = new HashMap<>();
+        columnMap.put("fight_id",id);
+        flightTicketDao.deleteByMap(columnMap);
     }
 }

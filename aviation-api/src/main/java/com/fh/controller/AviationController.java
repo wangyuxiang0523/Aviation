@@ -63,4 +63,12 @@ public class AviationController {
         map.put("message","添加完成");
         return map;
     }
+    @PostMapping("deleteFlight")
+    public Map deleteFlight(Integer id){
+        Map map=new HashMap();
+        aviationService.deleteFlight(id);
+        map.put("code",200);
+        map.put("message","删除成功");
+        return map;
+    }
  }
