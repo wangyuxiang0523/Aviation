@@ -72,4 +72,16 @@ public class AviationController {
         map.put("message","删除成功");
         return map;
     }
+    @PostMapping("plDelete")
+    public Map deleteFlight(String ids){
+        Map map=new HashMap();
+        String[] split = ids.split(",");
+        for (int i =0;i<split.length;i++){
+            aviationService.plDelete(Integer.valueOf(split[i]));
+        }
+
+        map.put("code",200);
+        map.put("message","删除成功");
+        return map;
+    }
  }

@@ -19,9 +19,10 @@
 <input type="button" value="查询" onclick="initTable()"><input type="reset" value="重置">
 </form><br>
 <input type="button" onclick="emportExcel()" value="导出Excel">
+<input type="button" onclick="plDelete()" value="批量取消">
   <table id="table" cellpadding="0" cellspacing="0" border="1">
       <tr>
-          <td><input type="checkbox"></td>
+          <td><input type="checkbox" name="ids" value=""></td>
           <td>航班姓名</td>
           <td>起飞时间</td>
           <td>到达时间</td>
@@ -79,19 +80,6 @@
         inittCity();
     })
     function emportExcel(){
-       /* $.post({
-            url:"http://localhost:9077/flight/exportEmpExcel",
-            data:$("#queryTable").serialize(),
-            dataType:"json",
-            success:function (result) {
-                if(result.code==200){
-                    location.href=result.data;
-                }else{
-                    alert(result.message);
-                }
-            }
-        })*/
-        /*window.location.href= "test/export?id="+nodes[0].id;*/
         var name =$("#name1").val()
         /*var startTime=$("#startTime1").val()*/
         var type = $("[name ='type']:checked").val()
@@ -120,6 +108,27 @@
                 alert(result.message)
                 location.reload
             }
+            }
+        })
+    }
+    function plDelete() {
+        var ids =''
+        $('input[name = "ids"]').each(function(){
+            if(this.checked == true){
+                ids += this.value + ',';
+            }
+        });
+        ids =ids.substring(0,ids.length-1);
+       $.ajax({
+            url:"http://localhost:9077/flight/plDelete",
+            type:"post",
+            data:{"ids":ids},
+            dataType:"json",
+            success:function (result) {
+                if(result.code == 200){
+                    alert(result.message)
+                    location.reload
+                }
             }
         })
     }
@@ -254,7 +263,7 @@
             success:function (result) {
                   var html=""
                   if (result.length == 0){
-                 html+='<tr><td><input type="checkbox"></td><td>航班姓名</td> <td>起飞时间</td><td>到达时间</td><td>票数</td><td>票价</td><td>操作</td></tr>'
+                 html+='<tr><td><input type="checkbox" value=""></td><td>航班姓名</td> <td>起飞时间</td><td>到达时间</td><td>票数</td><td>票价</td><td>操作</td></tr>'
                       $("#table").html(html)
                       return false
                    }
@@ -268,7 +277,7 @@
                       }else {
                           var type = "小型"
                       }
-                      html+='<tr><td><input type="checkbox"></td><td>'+result[i].flightName+"<br>"+result[i].planeName+"("+type+")"+'</td>'
+                      html+='<tr><td><input type="checkbox" value="'+result[i].flightId+'" name="ids"></td><td>'+result[i].flightName+"<br>"+result[i].planeName+"("+type+")"+'</td>'
                       if (result[i].near != null){
                           html+='<td>'+result[i].startTime+"<br>"+result[i].near+"<br>"+result[i].startPAreaName+result[i].startAreaName+'</td>'
                       }else {

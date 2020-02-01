@@ -108,4 +108,12 @@ public class AviationServiceImpl implements AviationService {
         columnMap.put("fight_id",id);
         flightTicketDao.deleteByMap(columnMap);
     }
+
+    @Override
+    public void plDelete(Integer s) {
+        aviationDao.deleteById(s);
+        Map<String,Object> columnMap = new HashMap<>();
+        columnMap.put("fight_id",s);
+        flightTicketDao.deleteByMap(columnMap);
+    }
 }
