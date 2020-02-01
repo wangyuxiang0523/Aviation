@@ -4,6 +4,7 @@ import com.fh.dao.AreaDao;
 import com.fh.dao.AviationDao;
 import com.fh.dao.FlightTicketDao;
 import com.fh.dao.PlaneTypeDao;
+import com.fh.model.FlightQuery;
 import com.fh.model.po.AreaPo;
 import com.fh.model.po.FlightPo;
 import com.fh.model.po.FlightTicket;
@@ -32,8 +33,8 @@ public class AviationServiceImpl implements AviationService {
 
 
     @Override
-    public List<FlightVo> initTable() {
-       List<FlightVo> list= aviationDao.initTable();
+    public List<FlightVo> initTable(FlightQuery flightQuery) {
+       List<FlightVo> list= aviationDao.initTable(flightQuery);
        for (int i=0;i<list.size();i++){
            Date date =new Date();
            long a =date.getTime();
@@ -43,16 +44,21 @@ public class AviationServiceImpl implements AviationService {
              if (hour <= 2){
                  list.get(i).setNear("临近起飞");
              }
-         List<FlightTicket>  flightTickets=aviationDao.selectTicketById(list.get(i).getFlightId());
+         List<FlightTicket>  flightTickets=aviationDao.selectTicketById(list.get(i).getFlightId(),flightQuery);
            Integer count = 0;
          for (int j=0;j<flightTickets.size();j++){
              if(flightTickets.get(j).getType()==1 && flightTickets.get(j).getTotalCount()!= 0){
                      list.get(i).setPrice(flightTickets.get(j).getPrice());
+                     flightTicketDao.updateIsSticket(flightTickets.get(j).getFlightId(),flightTickets.get(j).getType());
              }else {
+                     flightTicketDao.updateIsSticket1(flightTickets.get(j).getFlightId(),flightTickets.get(j).getType());
+             }
                  if( flightTickets.get(j).getType()==2 && flightTickets.get(j).getTotalCount() !=0){
                      list.get(i).setPrice(flightTickets.get(j).getPrice());
+                     flightTicketDao.updateIsSticket(flightTickets.get(j).getFlightId(),flightTickets.get(j).getType());
+             }else {
+                     flightTicketDao.updateIsSticket1(flightTickets.get(j).getFlightId(),flightTickets.get(j).getType());
                  }
-             }
             /*count+=flightTickets.get(i).getTotalCount();*/
              count= count + flightTickets.get(j).getTotalCount();
          }

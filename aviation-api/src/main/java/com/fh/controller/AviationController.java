@@ -1,5 +1,6 @@
 package com.fh.controller;
 
+import com.fh.model.FlightQuery;
 import com.fh.model.po.*;
 import com.fh.model.vo.FlightVo;
 import com.fh.service.AviationService;
@@ -21,8 +22,8 @@ public class AviationController {
     @Autowired
     private AviationService aviationService;
     @PostMapping("initTable")
-    public List initTable(){
-         List<FlightVo> list =aviationService.initTable();
+    public List initTable(FlightQuery flightQuery){
+         List<FlightVo> list =aviationService.initTable(flightQuery);
         return list;
     }
     @PostMapping("initForm")

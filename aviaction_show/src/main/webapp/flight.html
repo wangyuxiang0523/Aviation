@@ -7,17 +7,18 @@
     <script type="text/javascript" src="/My97DatePicker/WdatePicker.js"></script>
 </head>
 <body>
-<form>
+<form id="queryTable">
 航班姓名<input type="text" id="name1" name="name"><br>
 起飞时间<input type="text" name="startTime" id="startTime1" onclick="WdatePicker()"><br>
-机票类型<input type="radio" value="1">经济舱<input type="radio" value="2">头等舱<br>
-是否有票<input type="radio" value="1">有<input type="radio" value="2">无<br>
-机型大小<input type="radio" value="1">大型<input type="radio" value="2">中型<input type="radio" value="3">小型<br>
-机型<select></select><br>
-出发城市<input><br>
-到达城市<input><br>
-<input type="button" value="查询"><input type="reset" value="重置">
-</form>
+机票类型<input type="radio" value="1" name="type">经济舱<input type="radio" value="2" name="type">头等舱<br>
+是否有票<input type="radio" value="1" name="isTicket">有<input type="radio" value="2" name="isTicket">无<br>
+机型大小<input type="radio" value="1" name="planeSize">大型<input type="radio" value="2" name="planeSize">中型<input type="radio" value="3" name="planeSize">小型<br>
+机型<select id="type1" name="planeType"></select><br>
+出发城市<input name="startCity"><br>
+到达城市<input name="endCity"><br>
+<input type="button" value="查询" onclick="initTable()"><input type="reset" value="重置">
+</form><br>
+<input type="button" onclick="emportExcel()" value="导出Excel">
   <table id="table" cellpadding="0" cellspacing="0" border="1">
       <tr>
           <td><input type="checkbox"></td>
@@ -77,8 +78,38 @@
         initCity()
         inittCity();
     })
+    function emportExcel(){
+       /* $.post({
+            url:"http://localhost:9077/flight/exportEmpExcel",
+            data:$("#queryTable").serialize(),
+            dataType:"json",
+            success:function (result) {
+                if(result.code==200){
+                    location.href=result.data;
+                }else{
+                    alert(result.message);
+                }
+            }
+        })*/
+        /*window.location.href= "test/export?id="+nodes[0].id;*/
+        var name =$("#name1").val()
+        /*var startTime=$("#startTime1").val()*/
+        var type = $("[name ='type']:checked").val()
+        var isTicket= $("[name ='isTicket']:checked").val()
+        var planeSize=$("[name = 'planeSize']:checked").val()
+        var planeType=$("#type1").val()
+        if(isTicket == null){
+            isTicket =""
+        }
+        if(type == null){
+            type =""
+        }
+        if(planeSize == null){
+            planeSize =""
+        }
+      location.href= "http://localhost:9077/export?name="+name+"&type="+type+"&isTicket="+isTicket+"&planeSize="+planeSize+"&planeType="+planeType
+    }
     function addForm() {
-
         $.ajax({
             url:"http://localhost:9077/flight/addForm",
             type:"post",
@@ -98,11 +129,13 @@
             type:"post",
             dataType:"json",
             success:function (result) {
-                var typeHtml= ""
+
+               var typeHtml='<option value="0">请选择</option>'
                 for (var i=0;i<result.length;i++){
                     typeHtml+='<option value='+result[i].id+'>'+result[i].name+'</option>'
              }
              $("#type").html(typeHtml)
+             $("#type1").html(typeHtml)
             }
         })
     }
@@ -217,8 +250,15 @@
             url:"http://localhost:9077/flight/initTable",
             type:"post",
             dataType:"json",
+            data:$("#queryTable").serialize(),
             success:function (result) {
                   var html=""
+                  if (result.length == 0){
+                 html+='<tr><td><input type="checkbox"></td><td>航班姓名</td> <td>起飞时间</td><td>到达时间</td><td>票数</td><td>票价</td><td>操作</td></tr>'
+                      $("#table").html(html)
+                      return false
+                   }
+                html+='<tr><td><input type="checkbox"></td><td>航班姓名</td> <td>起飞时间</td><td>到达时间</td><td>票数</td><td>票价</td><td>操作</td></tr>'
                   for (var i=0;i<result.length;i++){
                       if(result[i].planeTypeId == 1){
                          var type = "大型"
@@ -238,10 +278,11 @@
                           html+='<td>'+result[i].totalCount+'</td><td>'+result[i].price+'</td>'
                           html+='<td><input type="button" value="订票"><input type="button" value="修改"><input type="button" value="取消航班" onclick="deleteFlight('+result[i].flightId+')"></td>'
                   }
-                  $("#table").append(html)
+                  $("#table").html(html)
             }
         })
     }
+
     function deleteFlight(id) {
            $.ajax({
            url:"http://localhost:9077/flight/deleteFlight",

@@ -1,5 +1,6 @@
 package com.fh.service;
 
+import com.fh.model.FlightQuery;
 import com.fh.model.po.AreaPo;
 import com.fh.model.po.FlightPo;
 import com.fh.model.po.FlightTicket;
@@ -9,7 +10,7 @@ import com.fh.model.vo.FlightVo;
 import java.util.List;
 
 public interface AviationService {
-    List<FlightVo> initTable();
+    List<FlightVo> initTable(FlightQuery flightQuery);
 
     List<PlaneTypeVo> initPlaneType();
 

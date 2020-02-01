@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fh.dao.FlightTicketDao">
+ <update id="updateIsSticket" >
+     update w_fight_ticket set isTicket = 1 where fight_id =#{flightId} and type =#{typeId}
+ </update>
+    <update id="updateIsSticket1">
+     update w_fight_ticket set isTicket = 0 where fight_id =#{flightId} and type =#{typeId}
+ </update>
+</mapper>

@@ -1,17 +1,19 @@
 package com.fh.model.vo;
 
+import com.fh.annotation.Export;
+
 import java.math.BigDecimal;
 import java.util.Date;
-
+@Export(title = "航班表")
 public class FlightVo {
    private Integer flightId;
-
+    @Export(name = "航班名")
     private String flightName;
-
+    @Export(name = "起飞时间")
     private Date startTime;
-
+    @Export(name = "到达时间")
     private Date endTime;
-
+    @Export(name = "飞机类型")
     private String planeName;
 
     private Integer planeTypeId;

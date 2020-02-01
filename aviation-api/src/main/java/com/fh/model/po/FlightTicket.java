@@ -13,8 +13,8 @@ public class FlightTicket {
    private Integer id;
     @TableField(value = "fight_id")
    private Integer flightId;
-
-
+   @TableField(value = "isTicket")
+   private Integer isTicket;
    private  Integer type;
    @TableField(value = "totalCount")
    private Integer totalCount;
@@ -41,6 +41,14 @@ public class FlightTicket {
 
     public Integer getType() {
         return type;
+    }
+
+    public Integer getIsTicket() {
+        return isTicket;
+    }
+
+    public void setIsTicket(Integer isTicket) {
+        this.isTicket = isTicket;
     }
 
     public void setType(Integer type) {
