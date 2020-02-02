@@ -33,6 +33,7 @@
 
   </table>
 <br>
+
   <form id="addForm">
 添加航班<br>
 航班姓名<input type="text" id="name" name="name"><br>
@@ -71,6 +72,46 @@
   <input name ="totalCount" id="totalCount"><input name="price" id="price"><br>
       <input type="button" value="提交" onclick="addForm()">
   </form>
+---------------------------------------------------------------------------------
+    <form id="updateForm">
+        修改航班<br>
+        <input type="hidden" name="flightId" id="flightId">
+        航班姓名<input type="text" id="name2" name="name"><br>
+        起飞时间<input type="text" name="startTime" id="startTime2" onclick="WdatePicker()"><br>
+        到达时间<input type="text" name="endTime" id="endTime2" onclick="WdatePicker()"><br>
+        机型<select id="type2" name="typeId">
+        <option></option>
+    </select><br>
+        出发机场:<select id="city2" onchange="initAirport3()">
+        <option></option>
+    </select>
+        <select id="airport2" onchange="initTerminal3()">
+            <option></option>
+        </select>
+        <select id="terminal2" name="startTermianlId">
+            <option></option>
+        </select>
+        <br>
+        到达机场:<select id="tCity2" onchange="initAirport4()">
+        <option></option>
+    </select>
+        <select id="tAirport2" onchange="initTerminal4()">
+            <option></option>
+        </select>
+        <select id="tTerminal2" name="endTermianlId">
+            <option></option>
+        </select>
+        <br>
+        机票<select id="jingji2" name="jingji">
+        <option value="1">经济舱</option>
+    </select>
+        <input name="totalCountt" id="totalCountt2"><input name="pricee" id="pricee2"><br>
+        <select id="toudeng2" name="toudeng">
+            <option value="2">头等舱</option>
+        </select>
+        <input name ="totalCount" id="totalCount2"><input name="price" id="price2"><br>
+        <input type="button" value="提交" onclick="updateFlight()">
+    </form>
 </body>
 <script type="text/javascript">
     $(function () {
@@ -78,10 +119,68 @@
         initForm()
         initCity()
         inittCity();
+        initCity2()
+        initCity3()
     })
+    function toUpdate(id) {
+        $.ajax({
+            url:"http://localhost:9077/flight/toUpdate",
+            type:"post",
+            data:{"id":id},
+            dataType:"json",
+            success:function (result) {
+                var data = result.flight;
+                var type = result.type;
+                alert(JSON.stringify(data))
+                $("#flightId").val(data.flightId)
+                $("#name2").val(data.flightName)
+                $("#startTime2").val(data.startTime)
+                $("#endTime2").val(data.endTime)
+                $("#totalCountt2").val(data.totalCount2)
+                $("#pricee2").val(data.price2)
+                $("#totalCount2").val(data.totalCount1)
+                $("#price2").val(data.price1)
+                var typeHtml='<option value="0">请选择</option>'
+                for (var i=0;i<type.length;i++){
+                    if (type[i].id ==data.planeTypeId){
+                        typeHtml+='<option value='+type[i].id+' selected>'+type[i].name+'</option>'
+                    }else{
+                        typeHtml+='<option value='+type[i].id+'>'+type[i].name+'</option>'
+                    }
+                }
+                $('#city2 option').each(function(){
+                    if( $(this).val() == data.startCityId){
+                        $(this).prop("selected",true);
+                        initAirport3();
+                    }
+                });
+                $('#tCity2 option').each(function(){
+                    if( $(this).val() == data.endCityId){
+                        alert("1")
+                        $(this).prop("selected",true);
+                        initAirport4()
+                    }
+                });
+                $("#type2").html(typeHtml)
+            }
+        })
+    }
+    function updateFlight() {
+        $.ajax({
+            url:"http://localhost:9077/flight/updateFlight",
+            type:"post",
+            data:$("#updateForm").serialize(),
+            dataType:"json",
+            success:function (result) {
+                if (result.code==200){
+                    alert(result.message)
+                    location.reload();
+                }
+            }
+        })
+    }
     function emportExcel(){
         var name =$("#name1").val()
-        /*var startTime=$("#startTime1").val()*/
         var type = $("[name ='type']:checked").val()
         var isTicket= $("[name ='isTicket']:checked").val()
         var planeSize=$("[name = 'planeSize']:checked").val()
@@ -106,7 +205,7 @@
             success:function (result) {
             if(result.code == 200){
                 alert(result.message)
-                location.reload
+                location.reload()
             }
             }
         })
@@ -127,7 +226,7 @@
             success:function (result) {
                 if(result.code == 200){
                     alert(result.message)
-                    location.reload
+                    location.reload()
                 }
             }
         })
@@ -145,15 +244,18 @@
              }
              $("#type").html(typeHtml)
              $("#type1").html(typeHtml)
+
             }
         })
     }
+    var ss =""
     function initCity() {
         $.ajax({
             url:"http://localhost:9077/flight/initCity",
             type:"post",
             dataType:"json",
             success:function (result) {
+                ss =result
                 var cityHtml=""
               for (var i=0;i<result.length;i++){
                   cityHtml+='<option value='+result[i].id+'>'+result[i].name+'</option>'
@@ -285,7 +387,7 @@
                       }
                           html+='<td>'+result[i].endTime+"<br>"+result[i].endPAreaName+result[i].endAreaName+'</td>'
                           html+='<td>'+result[i].totalCount+'</td><td>'+result[i].price+'</td>'
-                          html+='<td><input type="button" value="订票"><input type="button" value="修改"><input type="button" value="取消航班" onclick="deleteFlight('+result[i].flightId+')"></td>'
+                          html+='<td><input type="button" value="订票"><input type="button" value="修改" onclick="toUpdate('+result[i].flightId+')"><input type="button" value="取消航班" onclick="deleteFlight('+result[i].flightId+')"></td>'
                   }
                   $("#table").html(html)
             }
@@ -301,10 +403,114 @@
            success:function (result) {
                  if(result.code == 200){
                      alert(result.message)
-                     location.reload;
+                     location.reload();
                  }
            }
        })
+    }
+    function initCity2() {
+        $.ajax({
+            url:"http://localhost:9077/flight/initCity",
+            type:"post",
+            dataType:"json",
+            success:function (result) {
+                var cityHtml=""
+                for (var i=0;i<result.length;i++){
+                    cityHtml+='<option value='+result[i].id+'>'+result[i].name+'</option>'
+                }
+                $("#city2").html(cityHtml)
+                initAirport3()
+            }
+        })
+    }
+    function initAirport3(id) {
+        if(id == null){
+            id= $("#city2").val()
+        }
+        $.ajax({
+            url:"http://localhost:9077/flight/initAirport",
+            type:"post",
+            dataType:"json",
+            data:{"id":id},
+            success:function (result) {
+                var airportHtml=""
+                for (var i=0;i<result.length;i++){
+                    airportHtml+='<option value='+result[i].id+'>'+result[i].name+'</option>'
+                }
+                $("#airport2").html(airportHtml)
+                initTerminal3()
+            }
+        })
+    }
+    function initTerminal3(id) {
+        if (id == null ){
+            id= $("#airport2").val()
+        }
+        $.ajax({
+            url:"http://localhost:9077/flight/initTerminal",
+            type:"post",
+            dataType:"json",
+            data:{"id":id},
+            success:function (result) {
+                var terminalHtml=""
+                for (var i=0;i<result.length;i++){
+                    terminalHtml+='<option value='+result[i].id+'>'+result[i].name+'</option>'
+                }
+                $("#terminal2").html(terminalHtml)
+            }
+        })
+    }
+    function initCity3() {
+        $.ajax({
+            url:"http://localhost:9077/flight/initCity",
+            type:"post",
+            dataType:"json",
+            success:function (result) {
+                var cityHtml=""
+                for (var i=0;i<result.length;i++){
+                    cityHtml+='<option value='+result[i].id+'>'+result[i].name+'</option>'
+                }
+                $("#tCity2").html(cityHtml)
+                initAirport4()
+            }
+        })
+    }
+    function initAirport4(id) {
+        if(id == null){
+            id= $("#tCity2").val()
+        }
+        $.ajax({
+            url:"http://localhost:9077/flight/initAirport",
+            type:"post",
+            dataType:"json",
+            data:{"id":id},
+            success:function (result) {
+                var airportHtml=""
+                for (var i=0;i<result.length;i++){
+                    airportHtml+='<option value='+result[i].id+'>'+result[i].name+'</option>'
+                }
+                $("#tAirport2").html(airportHtml)
+                initTerminal4()
+            }
+        })
+    }
+    function initTerminal4(id) {
+        if (id == null ){
+            id= $("#tAirport2").val()
+        }
+        $.ajax({
+            url:"http://localhost:9077/flight/initTerminal",
+            type:"post",
+            dataType:"json",
+            data:{"id":id},
+            success:function (result) {
+                var terminalHtml=""
+                for (var i=0;i<result.length;i++){
+                    terminalHtml+='<option value='+result[i].id+'>'+result[i].name+'</option>'
+                }
+                $("#tTerminal2").html(terminalHtml)
+            }
+        })
     }
 </script>
 </html>

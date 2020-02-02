@@ -23,4 +23,7 @@ public interface AviationDao extends BaseMapper<FlightPo> {
     String queryEndPAreaName(Integer endAreaPid);
 
 
+    FlightVo queryFlightById(Integer id);
+
+    List<FlightTicket> queryTicketById(Integer flightId);
 }

@@ -44,4 +44,12 @@
     <select id="queryEndPAreaName" parameterType="Integer" resultType="String">
         select name from w_area where id = #{id}
     </select>
+    <select id="queryFlightById" parameterType="Integer" resultType="com.fh.model.vo.FlightVo">
+        select w.id flightId,w.name flightName,pt.name planeName,pt.type planeTypeId,w.startTime,w.endTime,
+     a.name startAreaName,a.id startAreaId,a.pid startAreaPid,b.id endAreaId,b.pid endAreaPid ,b.name endAreaName
+     from w_flight w left join w_plane_type pt on w.typeId = pt.id
+    left join w_area a on w.startTerminalId = a.id
+    left join w_area b on w.endTerminalId = b.id where w.id = #{id}
+
+    </select>
 </mapper>

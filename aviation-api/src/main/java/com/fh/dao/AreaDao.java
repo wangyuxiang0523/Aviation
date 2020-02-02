@@ -16,4 +16,6 @@ public interface AreaDao extends BaseMapper<AreaPo> {
     List<AreaPo> queryAirportById(Integer id);
 
     List<AreaPo> queryTerminal(Integer id);
+
+    Integer selectCityId(Integer startAreaPid);
 }

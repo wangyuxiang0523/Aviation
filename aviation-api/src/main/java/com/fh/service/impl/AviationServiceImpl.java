@@ -1,5 +1,6 @@
 package com.fh.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.fh.dao.AreaDao;
 import com.fh.dao.AviationDao;
 import com.fh.dao.FlightTicketDao;
@@ -98,6 +99,7 @@ public class AviationServiceImpl implements AviationService {
 
     @Override
     public void addTouDeng(FlightTicket flightTicket) {
+        flightTicket.setIsTicket(1);
         flightTicketDao.insert(flightTicket);
     }
 
@@ -115,5 +117,44 @@ public class AviationServiceImpl implements AviationService {
         Map<String,Object> columnMap = new HashMap<>();
         columnMap.put("fight_id",s);
         flightTicketDao.deleteByMap(columnMap);
+    }
+
+    @Override
+    public FlightVo queryFlightById(Integer id) {
+        FlightVo flightVo = aviationDao.queryFlightById(id);
+        Integer startCityId= areaDao.selectCityId(flightVo.getStartAreaPid());
+        Integer endCityId= areaDao.selectCityId(flightVo.getEndAreaPid());
+        flightVo.setStartCityId(startCityId);
+        flightVo.setEndCityId(endCityId);
+        Map<String,Object> columnMap = new HashMap<>();
+        columnMap.put("fight_id",id);
+        List<FlightTicket> flightTickets= flightTicketDao.selectByMap(columnMap);
+        for (int i=0;i<flightTickets.size();i++){
+            if (flightTickets.get(i).getType()==1){
+                 flightVo.setPrice1(flightTickets.get(i).getPrice());
+                 flightVo.setTotalCount1(flightTickets.get(i).getTotalCount());
+            }
+            if(flightTickets.get(i).getType()==2){
+                flightVo.setPrice2(flightTickets.get(i).getPrice());
+                flightVo.setTotalCount2(flightTickets.get(i).getTotalCount());
+            }
+        }
+        return flightVo;
+    }
+
+    @Override
+    public void updateFlightById(FlightPo flightPo) {
+        aviationDao.updateById(flightPo);
+    }
+
+    @Override
+    public void updateTicketByFlightId(FlightTicket flightTicket) {
+
+        flightTicketDao.update(
+                flightTicket,
+                new UpdateWrapper<FlightTicket>()
+                        .eq("fight_id",flightTicket.getFlightId())
+                        .eq("type",flightTicket.getType()));
+
     }
 }

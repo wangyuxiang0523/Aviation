@@ -84,4 +84,32 @@ public class AviationController {
         map.put("message","删除成功");
         return map;
     }
+    @PostMapping("toUpdate")
+    public Map toUpdate(Integer id){
+        Map<String,Object> map = new HashMap();
+        FlightVo flightVo = aviationService.queryFlightById(id);
+        List<PlaneTypeVo> list =aviationService.initPlaneType();
+        map.put("flight",flightVo);
+        map.put("type",list);
+        return map;
+    }
+    @PostMapping("updateFlight")
+    public Map updateFlight( FlightVo flightVo,FlightPo flightPo,AddFlightPo addFlightPo){
+        Map map =new HashMap();
+        flightPo.setId(flightVo.getFlightId());
+        aviationService.updateFlightById(flightPo);
+        FlightTicket flightTicket=new FlightTicket();
+        flightTicket.setFlightId(flightPo.getId());
+        flightTicket.setTotalCount(addFlightPo.getTotalCount());
+        flightTicket.setPrice(addFlightPo.getPrice());
+        flightTicket.setType(addFlightPo.getToudeng());
+        aviationService.updateTicketByFlightId(flightTicket);
+        flightTicket.setType(addFlightPo.getJingji());
+        flightTicket.setPrice(addFlightPo.getPricee());
+        flightTicket.setTotalCount(addFlightPo.getTotalCountt());
+        aviationService.updateTicketByFlightId(flightTicket);
+        map.put("code",200);
+        map.put("message","修改完成");
+        return map;
+    }
  }

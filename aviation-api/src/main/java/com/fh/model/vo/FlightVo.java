@@ -1,6 +1,8 @@
 package com.fh.model.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fh.annotation.Export;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -10,8 +12,12 @@ public class FlightVo {
     @Export(name = "航班名")
     private String flightName;
     @Export(name = "起飞时间")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date startTime;
     @Export(name = "到达时间")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date endTime;
     @Export(name = "飞机类型")
     private String planeName;
@@ -39,6 +45,66 @@ public class FlightVo {
     private Integer endAreaId;
 
     private String near;
+
+    private Integer totalCount1;
+
+    private Integer totalCount2;
+
+    private BigDecimal price1;
+
+    private BigDecimal price2;
+
+    private Integer startCityId;
+
+    private Integer endCityId;
+
+    public Integer getStartCityId() {
+        return startCityId;
+    }
+
+    public void setStartCityId(Integer startCityId) {
+        this.startCityId = startCityId;
+    }
+
+    public Integer getEndCityId() {
+        return endCityId;
+    }
+
+    public void setEndCityId(Integer endCityId) {
+        this.endCityId = endCityId;
+    }
+
+    public Integer getTotalCount1() {
+        return totalCount1;
+    }
+
+    public void setTotalCount1(Integer totalCount1) {
+        this.totalCount1 = totalCount1;
+    }
+
+    public Integer getTotalCount2() {
+        return totalCount2;
+    }
+
+    public void setTotalCount2(Integer totalCount2) {
+        this.totalCount2 = totalCount2;
+    }
+
+    public BigDecimal getPrice1() {
+        return price1;
+    }
+
+    public void setPrice1(BigDecimal price1) {
+        this.price1 = price1;
+    }
+
+    public BigDecimal getPrice2() {
+        return price2;
+    }
+
+    public void setPrice2(BigDecimal price2) {
+        this.price2 = price2;
+    }
 
     public String getNear() {
         return near;

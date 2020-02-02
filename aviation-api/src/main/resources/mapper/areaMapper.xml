@@ -10,4 +10,7 @@
     <select id="queryTerminal"  parameterType="Integer" resultType="com.fh.model.po.AreaPo">
         select * from w_area where pid=#{id}
     </select>
+    <select id="selectCityId" parameterType="Integer" resultType="Integer">
+        select pid from w_area where id =#{id}
+    </select>
 </mapper>

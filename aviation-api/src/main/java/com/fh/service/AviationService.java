@@ -27,4 +27,10 @@ public interface AviationService {
     void deleteFlight(Integer id);
 
     void plDelete(Integer s);
+
+    FlightVo queryFlightById(Integer id);
+
+    void updateFlightById(FlightPo flightPo);
+
+    void updateTicketByFlightId(FlightTicket flightTicket);
 }
